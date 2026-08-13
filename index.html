@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pragati Home Tuition | Home Tuition Classes in Patna</title>
 <meta name="description" content="Pragati Home Tuition — quality home and online tuition in Patna for Class 1st to 12th, CBSE, ICSE and Bihar Board.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%2310193a'/%3E%3Cpath d='M20 12c-2.6-1.7-5.7-2.5-8.5-2.5A1.6 1.6 0 0 0 9.9 11v13.5A1.6 1.6 0 0 0 11.5 26c2.8 0 5.9.8 8.5 2.5' fill='none' stroke='%23d8ac66' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M20 12c2.6-1.7 5.7-2.5 8.5-2.5A1.6 1.6 0 0 1 30.1 11v13.5a1.6 1.6 0 0 1-1.6 1.5c-2.8 0-5.9.8-8.5 2.5' fill='none' stroke='%23d8ac66' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M20 12v16.5' stroke='%23d8ac66' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +35,7 @@
     --radius: 16px;
     --shadow: 0 20px 44px -26px rgba(16, 25, 58, 0.35);
     --nav-height: 72px;
+    --mobile-bar-height: 62px;
     --ease: cubic-bezier(.4,0,.2,1);
   }
 
@@ -82,8 +84,19 @@
   .section__title{ font-size: clamp(1.65rem, 3.2vw, 2.4rem); }
   .section__desc{ color: var(--muted); margin-top: 12px; font-size: 1rem; }
 
+  /* ============ SCROLL PROGRESS ============ */
+  .scroll-progress{
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--gold);
+    z-index: 999;
+  }
+
   /* ============ BUTTONS ============ */
   .btn{
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -125,9 +138,14 @@
     height: var(--nav-height);
     display: flex;
     align-items: center;
-    background: rgba(16, 25, 58, 0.9);
+    background: rgba(16, 25, 58, 0.86);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: background 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .navbar.is-scrolled{
+    background: rgba(16, 25, 58, 0.97);
+    box-shadow: 0 10px 26px -16px rgba(0,0,0,0.5);
   }
   .navbar .container{
     display: flex;
@@ -137,16 +155,14 @@
   }
   .navbar__logo{ display: flex; align-items: center; gap: 12px; }
   .navbar__mark{
-    width: 40px; height: 40px;
-    border-radius: 10px;
+    width: 42px; height: 42px;
+    border-radius: 11px;
     background: var(--gold);
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 1.15rem;
     color: var(--navy-deep);
     flex-shrink: 0;
   }
+  .navbar__mark svg{ width: 24px; height: 24px; }
   .navbar__word{ line-height: 1.15; }
   .navbar__word strong{
     display: block;
@@ -208,19 +224,30 @@
     position: relative;
     overflow: hidden;
     background: var(--navy-deep);
-    padding: 96px 0 100px;
+    padding: 84px 0 88px;
     scroll-margin-top: var(--nav-height);
   }
-  /* Quiet ruled-page motif, echoed later in the About section's notebook card */
   .hero::before{
     content: "";
     position: absolute; inset: 0;
     background-image:
-      radial-gradient(680px 420px at 88% -8%, rgba(184,134,58,0.18), transparent 60%),
+      radial-gradient(680px 420px at 92% -10%, rgba(184,134,58,0.20), transparent 60%),
       repeating-linear-gradient(to bottom, transparent, transparent 43px, rgba(255,255,255,0.035) 44px);
     pointer-events: none;
   }
-  .hero__inner{ position: relative; z-index: 1; max-width: 660px; }
+  .hero .container{ position: relative; z-index: 1; }
+  .hero__grid{ display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items: center; }
+
+  .hero__eyebrow, .hero__title, .hero__subtitle, .hero__actions{
+    opacity: 0;
+    animation: heroUp 0.6s var(--ease) forwards;
+  }
+  .hero__eyebrow{ animation-delay: 0.05s; }
+  .hero__title{ animation-delay: 0.15s; }
+  .hero__subtitle{ animation-delay: 0.25s; }
+  .hero__actions{ animation-delay: 0.35s; }
+  @keyframes heroUp{ from{ opacity: 0; transform: translateY(14px); } to{ opacity: 1; transform: translateY(0); } }
+
   .hero__eyebrow{
     display: inline-flex; align-items: center; gap: 8px;
     font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
@@ -228,18 +255,61 @@
   }
   .hero__eyebrow::before{ content:""; width:24px; height:2px; background: var(--gold); display:inline-block; }
   .hero__title{
-    font-size: clamp(2.2rem, 5.4vw, 3.6rem);
+    font-size: clamp(2.1rem, 4.6vw, 3.3rem);
     color: var(--white);
     margin-bottom: 18px;
   }
   .hero__title em{ font-style: italic; color: var(--gold-light); }
   .hero__subtitle{
-    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
     color: rgba(255,255,255,0.78);
-    max-width: 480px;
-    margin-bottom: 36px;
+    max-width: 460px;
+    margin-bottom: 32px;
   }
   .hero__actions{ display: flex; flex-wrap: wrap; gap: 14px; }
+
+  /* Hero illustration panel */
+  .hero__media{
+    position: relative;
+    opacity: 0;
+    animation: heroFade 0.7s var(--ease) forwards 0.3s;
+  }
+  @keyframes heroFade{ from{ opacity: 0; transform: scale(0.97); } to{ opacity: 1; transform: scale(1); } }
+  .hero__panel{
+    position: relative;
+    border-radius: 22px;
+    background: linear-gradient(155deg, var(--navy-soft), var(--navy));
+    border: 1px solid rgba(216,172,102,0.22);
+    padding: 34px;
+    aspect-ratio: 1 / 0.92;
+    display: flex; align-items: center; justify-content: center;
+    overflow: visible;
+  }
+  .hero__panel svg{ width: 100%; height: 100%; }
+  .hero__badge{
+    position: absolute;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--white);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 16px 32px -16px rgba(0,0,0,0.4);
+  }
+  .hero__badge-icon{
+    width: 34px; height: 34px; border-radius: 9px;
+    background: var(--navy); color: var(--gold-light);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .hero__badge-icon svg{ width: 17px; height: 17px; }
+  .hero__badge-num{ font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.05rem; color: var(--navy-deep); line-height: 1.1; }
+  .hero__badge-label{ font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+  .hero__badge--top{ top: -18px; left: -14px; animation: floatSlow 4.5s ease-in-out infinite; }
+  .hero__badge--bottom{ bottom: -16px; right: -12px; animation: floatSlow 4.5s ease-in-out infinite 0.4s; }
+  @keyframes floatSlow{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-9px); } }
+
+  @media (max-width: 960px){
+    .hero__grid{ grid-template-columns: 1fr; }
+    .hero__media{ order: -1; max-width: 340px; margin: 0 auto 8px; }
+  }
 
   /* ============ ABOUT ============ */
   .about{ background: var(--cream); scroll-margin-top: var(--nav-height); }
@@ -255,7 +325,9 @@
     padding: 9px 16px; background: var(--white);
     border: 1px solid rgba(26,42,94,0.1); border-radius: 999px;
     font-weight: 600; font-size: 0.88rem; color: var(--navy);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
   }
+  .about__chip:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
   .about__chip svg{ width: 15px; height: 15px; color: var(--gold); }
 
   .about__notes{
@@ -280,16 +352,23 @@
     padding: 30px 24px;
     transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
   }
-  .feature-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow); border-color: rgba(184,134,58,0.3); }
+  .feature-card:hover{ transform: translateY(-6px); box-shadow: var(--shadow); border-color: rgba(184,134,58,0.3); }
   .feature-card__icon{
     width: 46px; height: 46px; border-radius: 12px;
     background: var(--navy);
     display: flex; align-items: center; justify-content: center;
     color: var(--gold-light); margin-bottom: 18px;
+    transition: transform 0.3s var(--ease);
   }
+  .feature-card:hover .feature-card__icon{ transform: rotate(-6deg) scale(1.06); }
   .feature-card__icon svg{ width: 22px; height: 22px; }
   .feature-card__title{ font-size: 1.05rem; margin-bottom: 8px; color: var(--navy-deep); }
   .feature-card__desc{ color: var(--muted); font-size: 0.94rem; }
+  .feature-grid .reveal:nth-child(2){ transition-delay: 0.08s; }
+  .feature-grid .reveal:nth-child(3){ transition-delay: 0.16s; }
+  .feature-grid .reveal:nth-child(4){ transition-delay: 0.08s; }
+  .feature-grid .reveal:nth-child(5){ transition-delay: 0.16s; }
+  .feature-grid .reveal:nth-child(6){ transition-delay: 0.24s; }
 
   /* ============ STATS BAR ============ */
   .stats-bar{ background: var(--cream); padding: 56px 0; border-bottom: 1px solid rgba(26,42,94,0.08); }
@@ -327,6 +406,34 @@
     .stats-bar__item:nth-child(3)::before{ display: none; }
   }
 
+  /* ============ HOW IT WORKS ============ */
+  .how{ background: var(--cream); }
+  .how__steps{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; position: relative; }
+  .how__steps::before{
+    content: "";
+    position: absolute;
+    top: 27px; left: 12%; right: 12%;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, rgba(184,134,58,0.4) 0 10px, transparent 10px 20px);
+  }
+  .how__step{ position: relative; text-align: center; }
+  .how__num{
+    width: 54px; height: 54px; border-radius: 50%;
+    background: var(--navy); color: var(--gold-light);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.25rem;
+    margin: 0 auto 18px; position: relative; z-index: 1;
+    box-shadow: 0 0 0 6px var(--cream);
+    transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+  }
+  .how__step:hover .how__num{ transform: scale(1.08); background: var(--gold); color: var(--navy-deep); }
+  .how__step h3{ font-size: 1.05rem; margin-bottom: 8px; }
+  .how__step p{ color: var(--muted); font-size: 0.92rem; max-width: 240px; margin: 0 auto; }
+  @media (max-width: 760px){
+    .how__steps{ grid-template-columns: 1fr; gap: 32px; }
+    .how__steps::before{ display: none; }
+  }
+
   /* ============ SUBJECTS ============ */
   .subjects{ background: var(--white); }
   .subjects__grid{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
@@ -338,8 +445,9 @@
     text-align: center;
     transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
   }
-  .subjects__card:hover{ transform: translateY(-3px); box-shadow: var(--shadow); border-color: rgba(184,134,58,0.3); }
-  .subjects__icon{ display: block; font-size: 1.9rem; margin-bottom: 10px; }
+  .subjects__card:hover{ transform: translateY(-5px); box-shadow: var(--shadow); border-color: rgba(184,134,58,0.3); }
+  .subjects__icon{ display: block; font-size: 1.9rem; margin-bottom: 10px; transition: transform 0.25s var(--ease); }
+  .subjects__card:hover .subjects__icon{ transform: scale(1.15); }
   .subjects__card h3{ font-family: 'Work Sans', sans-serif; font-weight: 700; font-size: 0.92rem; color: var(--navy-deep); }
   @media (max-width: 860px){ .subjects__grid{ grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 640px){
@@ -357,7 +465,7 @@
     padding: 28px 26px;
     transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
   }
-  .testimonial-card:hover{ transform: translateY(-3px); box-shadow: var(--shadow); }
+  .testimonial-card:hover{ transform: translateY(-5px); box-shadow: var(--shadow); }
   .testimonial-card__stars{ color: var(--gold); font-size: 1rem; letter-spacing: 3px; margin-bottom: 12px; }
   .testimonial-card__text{ color: var(--muted); font-size: 0.94rem; line-height: 1.65; margin-bottom: 22px; }
   .testimonial-card__author{ display: flex; align-items: center; gap: 12px; }
@@ -417,13 +525,61 @@
   .fees__table td.fees__price{ text-align: right; font-weight: 700; color: var(--gold); font-family: 'Fraunces', serif; font-size: 1.08rem; }
   .fees__note{ text-align: center; color: rgba(255,255,255,0.6); font-size: 0.88rem; margin-top: 20px; }
 
+  /* ============ FAQ ============ */
+  .faq{ background: var(--white); }
+  .faq__list{ max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq__item{
+    background: var(--cream);
+    border: 1px solid rgba(26,42,94,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .faq__q{
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 18px 22px;
+    background: none; border: none; cursor: pointer;
+    text-align: left;
+    font-weight: 600; font-size: 0.98rem; color: var(--navy-deep);
+  }
+  .faq__q-icon{
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--white); border: 1.5px solid rgba(26,42,94,0.15);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    transition: transform 0.3s var(--ease), background 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+  .faq__q-icon svg{ width: 13px; height: 13px; color: var(--navy); transition: color 0.3s var(--ease); }
+  .faq__item.is-open .faq__q-icon{ transform: rotate(45deg); background: var(--gold); border-color: var(--gold); }
+  .faq__item.is-open .faq__q-icon svg{ color: var(--navy-deep); }
+  .faq__a-wrap{ display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s var(--ease); }
+  .faq__item.is-open .faq__a-wrap{ grid-template-rows: 1fr; }
+  .faq__a-inner{ overflow: hidden; }
+  .faq__a{ padding: 0 22px 20px; color: var(--muted); font-size: 0.92rem; line-height: 1.65; }
+
+  /* ============ LOCATION / MAP ============ */
+  .location{ background: var(--cream); }
+  .location__grid{ display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 40px; align-items: center; }
+  .location__text p{ color: var(--muted); font-size: 1rem; margin-bottom: 22px; }
+  .location__list{ display: flex; flex-direction: column; gap: 12px; }
+  .location__list li{ display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.96rem; color: var(--ink); }
+  .location__list svg{ width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; }
+  .location__map{
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(26,42,94,0.08);
+    line-height: 0;
+  }
+  .location__map iframe{ width: 100%; height: 320px; border: 0; display: block; }
+  @media (max-width: 860px){ .location__grid{ grid-template-columns: 1fr; } }
+
   /* ============ CONTACT ============ */
-  .contact{ background: var(--cream); scroll-margin-top: var(--nav-height); }
+  .contact{ background: var(--white); scroll-margin-top: var(--nav-height); }
   .contact__grid{ display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 44px; align-items: start; }
   .contact__cards{ display: flex; flex-direction: column; gap: 14px; }
   .contact__card{
     display: flex; align-items: center; gap: 16px;
-    background: var(--white); border-radius: var(--radius);
+    background: var(--cream); border-radius: var(--radius);
     padding: 18px 20px;
     border: 1px solid rgba(26,42,94,0.08);
     transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
@@ -439,7 +595,7 @@
   .contact__card-label{ font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
   .contact__card-value{ font-weight: 600; font-size: 1rem; color: var(--navy-deep); }
 
-  .contact__form-wrap{ background: var(--white); border-radius: var(--radius); padding: 34px; box-shadow: var(--shadow); }
+  .contact__form-wrap{ background: var(--cream); border-radius: var(--radius); padding: 34px; box-shadow: var(--shadow); border: 1px solid rgba(26,42,94,0.06); }
   .contact__form-wrap h3{ font-size: 1.2rem; margin-bottom: 6px; }
   .contact__form-wrap p.hint{ color: var(--muted); font-size: 0.9rem; margin-bottom: 22px; }
 
@@ -449,11 +605,11 @@
   .form-group input, .form-group select, .form-group textarea{
     padding: 12px 14px; border-radius: 10px;
     border: 1.5px solid rgba(26,42,94,0.18);
-    background: var(--cream);
+    background: var(--white);
     font-size: 1rem;
-    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    transition: border-color 0.2s var(--ease);
   }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus{ outline: none; border-color: var(--gold); background: var(--white); }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus{ outline: none; border-color: var(--gold); }
   .form-group textarea{ resize: vertical; min-height: 88px; }
 
   .radio-group{ display: flex; gap: 18px; margin-top: 4px; }
@@ -463,11 +619,11 @@
   .form-status{ margin-top: 14px; font-size: 0.86rem; color: var(--navy); min-height: 18px; }
 
   /* ============ FOOTER ============ */
-  .footer{ background: var(--navy-deep); color: rgba(255,255,255,0.72); padding: 36px 0; text-align: center; font-size: 0.88rem; }
+  .footer{ background: var(--navy-deep); color: rgba(255,255,255,0.72); padding: 36px 0 calc(36px); text-align: center; font-size: 0.88rem; }
   .footer strong{ color: var(--white); }
   .footer__tagline{ color: var(--gold-light); font-family: 'Fraunces', serif; font-style: italic; margin-top: 6px; }
 
-  /* ============ WHATSAPP FLOAT ============ */
+  /* ============ WHATSAPP FLOAT (desktop only) ============ */
   .whatsapp-float{
     position: fixed;
     right: calc(20px + env(safe-area-inset-right));
@@ -484,7 +640,31 @@
   .whatsapp-float:hover{ transform: scale(1.06); background: var(--gold-light); }
   .whatsapp-float svg{ width: 26px; height: 26px; }
 
-  /* ============ REVEAL (single, quiet fade-up) ============ */
+  /* ============ MOBILE STICKY CTA BAR ============ */
+  .mobile-cta{
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 200;
+    background: var(--white);
+    border-top: 1px solid rgba(26,42,94,0.1);
+    padding: 10px calc(14px + env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-right));
+    box-shadow: 0 -12px 26px -16px rgba(0,0,0,0.25);
+    gap: 10px;
+  }
+  .mobile-cta a{
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .mobile-cta a svg{ width: 17px; height: 17px; }
+  .mobile-cta__call{ background: var(--navy); color: var(--white); }
+  .mobile-cta__whatsapp{ background: var(--gold); color: var(--navy-deep); }
+
+  /* ============ REVEAL (quiet fade-up) ============ */
   .reveal{ opacity: 0; transform: translateY(14px); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); }
   .reveal.is-visible{ opacity: 1; transform: translateY(0); }
 
@@ -515,11 +695,14 @@
   }
 
   @media (max-width: 640px){
+    body{ padding-bottom: var(--mobile-bar-height); }
     .section{ padding: 68px 0; }
     .section__header{ margin-bottom: 36px; }
-    .hero{ padding: 76px 0 56px; text-align: left; }
+    .hero{ padding: 68px 0 48px; text-align: left; }
     .hero__actions .btn{ width: 100%; }
     .hero__actions{ flex-direction: column; }
+    .hero__panel{ padding: 26px; }
+    .hero__badge{ padding: 10px 13px; }
     .feature-grid{ grid-template-columns: 1fr; }
     .form-row{ grid-template-columns: 1fr; }
     .about__notes{ padding: 30px 22px 30px 44px; }
@@ -533,18 +716,27 @@
     .fees__table td.fees__price{ text-align: left; }
     .fees__table td.fees__price::before{ content: "Monthly Fee"; display: block; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
 
-    .whatsapp-float{ width: 50px; height: 50px; }
-    .whatsapp-float svg{ width: 23px; height: 23px; }
+    .whatsapp-float{ display: none; }
+    .mobile-cta{ display: flex; }
   }
 </style>
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
+
 <!-- ============ NAVBAR ============ -->
 <header class="navbar" id="navbar">
   <div class="container">
     <a href="#home" class="navbar__logo">
-      <span class="navbar__mark" aria-hidden="true">P</span>
+      <span class="navbar__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 6c-1.8-1.3-4.3-2-6.5-2A1.5 1.5 0 0 0 4 5.5v11A1.5 1.5 0 0 0 5.5 18c2.2 0 4.7.7 6.5 2"/>
+          <path d="M12 6c1.8-1.3 4.3-2 6.5-2A1.5 1.5 0 0 1 20 5.5v11A1.5 1.5 0 0 1 18.5 18c-2.2 0-4.7.7-6.5 2"/>
+          <path d="M12 6v14"/>
+          <path d="m15 4.6 2.2-1.8 1.8 2-2.4 1.5" stroke-width="1.3"/>
+        </svg>
+      </span>
       <span class="navbar__word">
         <strong>Pragati</strong>
         <span>Home Tuition</span>
@@ -556,6 +748,7 @@
       <a class="navbar__link" href="#about">About</a>
       <a class="navbar__link" href="#subjects">Subjects</a>
       <a class="navbar__link" href="#classes">Classes</a>
+      <a class="navbar__link" href="#faq">FAQ</a>
       <a class="navbar__link" href="#contact">Contact</a>
     </nav>
 
@@ -569,15 +762,40 @@
   <!-- ============ HERO ============ -->
   <section class="hero" id="home">
     <div class="container">
-      <div class="hero__inner">
-        <span class="hero__eyebrow">Pragati Home Tuition · Patna</span>
-        <h1 class="hero__title">Your Progress, <em>Our Mission</em></h1>
-        <p class="hero__subtitle">Quality home tuition at your doorstep in Patna — Class 1st to 12th, CBSE, ICSE and Bihar Board.</p>
-        <div class="hero__actions">
-          <a href="#contact" class="btn btn--primary">Enroll Now</a>
-          <a href="https://wa.me/917543818789?text=Hi!%20I%20want%20to%20know%20more%20about%20home%20tuition%20classes." target="_blank" rel="noopener" class="btn btn--ghost">
-            WhatsApp Us
-          </a>
+      <div class="hero__grid">
+        <div class="hero__inner">
+          <span class="hero__eyebrow">Pragati Home Tuition · Patna</span>
+          <h1 class="hero__title">Your Progress, <em>Our Mission</em></h1>
+          <p class="hero__subtitle">Quality home tuition at your doorstep in Patna — Class 1st to 12th, CBSE, ICSE and Bihar Board.</p>
+          <div class="hero__actions">
+            <a href="#contact" class="btn btn--primary">Enroll Now</a>
+            <a href="https://wa.me/917543818789?text=Hi!%20I%20want%20to%20know%20more%20about%20home%20tuition%20classes." target="_blank" rel="noopener" class="btn btn--ghost">
+              WhatsApp Us
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__media" aria-hidden="true">
+          <div class="hero__panel">
+            <svg viewBox="0 0 220 200" fill="none">
+              <path d="M110 46c-16-12-38-18-58-18-6 0-10 4-10 10v98c0 6 4 10 10 10 20 0 42 6 58 18" stroke="#d8ac66" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M110 46c16-12 38-18 58-18 6 0 10 4 10 10v98c0 6-4 10-10 10-20 0-42 6-58 18" stroke="#d8ac66" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M110 46v98" stroke="#d8ac66" stroke-width="3.2" stroke-linecap="round"/>
+              <path d="M78 40h48l-8-18a4 4 0 0 0-3.6-2.3H89.6A4 4 0 0 0 86 22Z" fill="#d8ac66" opacity="0.9"/>
+              <circle cx="46" cy="150" r="4" fill="#d8ac66" opacity="0.7"/>
+              <circle cx="176" cy="66" r="3" fill="#d8ac66" opacity="0.55"/>
+              <circle cx="184" cy="150" r="4" fill="#d8ac66" opacity="0.7"/>
+            </svg>
+          </div>
+
+          <div class="hero__badge hero__badge--top">
+            <span class="hero__badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/></svg></span>
+            <span><span class="hero__badge-num">50+</span><br><span class="hero__badge-label">Students Enrolled</span></span>
+          </div>
+          <div class="hero__badge hero__badge--bottom">
+            <span class="hero__badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 13 4 4L19 7"/></svg></span>
+            <span><span class="hero__badge-num">90%</span><br><span class="hero__badge-label">Success Rate</span></span>
+          </div>
         </div>
       </div>
     </div>
@@ -699,6 +917,35 @@
     </div>
   </section>
 
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="how section">
+    <div class="container">
+      <div class="section__header reveal">
+        <span class="section__eyebrow">Getting Started</span>
+        <h2 class="section__title">Three Steps to Your First Class</h2>
+        <p class="section__desc">A simple process, from your first message to your child's first lesson.</p>
+      </div>
+
+      <div class="how__steps">
+        <div class="how__step reveal">
+          <div class="how__num">1</div>
+          <h3>Enquire</h3>
+          <p>Message us on WhatsApp or call with your child's class and subjects.</p>
+        </div>
+        <div class="how__step reveal">
+          <div class="how__num">2</div>
+          <h3>Free Demo Class</h3>
+          <p>We match a tutor and schedule a free trial session at your convenience.</p>
+        </div>
+        <div class="how__step reveal">
+          <div class="how__num">3</div>
+          <h3>Start Learning</h3>
+          <p>Happy with the demo? Regular classes begin, at home or online.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ SUBJECTS GRID ============ -->
   <section class="subjects section" id="subjects">
     <div class="container">
@@ -810,6 +1057,80 @@
     </div>
   </section>
 
+  <!-- ============ FAQ ============ -->
+  <section class="faq section" id="faq">
+    <div class="container">
+      <div class="section__header reveal">
+        <span class="section__eyebrow">Common Questions</span>
+        <h2 class="section__title">Frequently Asked Questions</h2>
+        <p class="section__desc">Still unsure about something? Ask us directly on WhatsApp.</p>
+      </div>
+
+      <div class="faq__list reveal">
+        <div class="faq__item is-open">
+          <button class="faq__q" type="button" aria-expanded="true">
+            Is the first demo class really free?
+            <span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="faq__a-wrap"><div class="faq__a-inner"><p class="faq__a">Yes. The first class is completely free with no obligation to continue — it's simply a chance for you and the tutor to see if it's a good fit.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false">
+            What is the difference between home and online tuition?
+            <span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="faq__a-wrap"><div class="faq__a-inner"><p class="faq__a">Home tuition means the tutor visits your residence in Patna for in-person classes. Online tuition covers the same syllabus over a video call, useful if timing or distance is a constraint. Both follow the same curriculum and testing schedule.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false">
+            Which boards and classes do you cover?
+            <span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="faq__a-wrap"><div class="faq__a-inner"><p class="faq__a">We teach Class 1st to 12th across CBSE, ICSE and Bihar Board curriculums, including all core subjects listed above.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false">
+            How is the monthly fee decided?
+            <span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="faq__a-wrap"><div class="faq__a-inner"><p class="faq__a">It depends on the class, number of subjects, board and whether classes are at home or online. The table above gives a starting range — message us for an exact quote for your child.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false">
+            Are classes one-on-one or in a group?
+            <span class="faq__q-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          </button>
+          <div class="faq__a-wrap"><div class="faq__a-inner"><p class="faq__a">Classes are kept small and personal so every student gets individual attention — we can discuss one-on-one or small-batch options based on what suits your child.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOCATION ============ -->
+  <section class="location section">
+    <div class="container">
+      <div class="location__grid">
+        <div class="location__text reveal">
+          <span class="about__eyebrow">Where We Teach</span>
+          <h2 class="section__title" style="margin-bottom:14px;">Serving Patna &amp; Nearby Areas</h2>
+          <p>Whether it's home tuition at your residence or an online class, Pragati Home Tuition is built around Patna families and their school timings.</p>
+          <ul class="location__list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>Home visits across Patna, Bihar</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Flexible morning &amp; evening slots</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/><path d="M3 10.5 12 3l9 7.5"/></svg>Online classes available anywhere</li>
+          </ul>
+        </div>
+        <div class="location__map reveal">
+          <iframe title="Patna, Bihar map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Patna%2C%20Bihar&t=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ CONTACT ============ -->
   <section class="contact section" id="contact">
     <div class="container">
@@ -899,11 +1220,23 @@
   </div>
 </footer>
 
-<!-- ============ WHATSAPP FLOAT ============ -->
+<!-- ============ WHATSAPP FLOAT (desktop) ============ -->
 <a href="https://wa.me/917543818789?text=Hi!%20I'd%20like%20to%20enquire%20about%20Pragati%20Home%20Tuition."
    target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat with us on WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.5 7.7 9.3 7.2c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.1-.3-.2-.6-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
 </a>
+
+<!-- ============ MOBILE STICKY CTA BAR ============ -->
+<div class="mobile-cta">
+  <a href="tel:+917543818789" class="mobile-cta__call">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C11.6 21 3 12.4 3 2c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8Z"/></svg>
+    Call Now
+  </a>
+  <a href="https://wa.me/917543818789?text=Hi!%20I'd%20like%20to%20enquire%20about%20Pragati%20Home%20Tuition." target="_blank" rel="noopener" class="mobile-cta__whatsapp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C10 9 9.5 7.7 9.3 7.2c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.2-1.3-.1-.1-.3-.2-.6-.3Z"/><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
+    WhatsApp
+  </a>
+</div>
 
 <script>
   // ---------- Mobile nav toggle ----------
@@ -925,6 +1258,23 @@
   });
   navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+
+  // ---------- Sticky navbar scrolled state + scroll progress (rAF throttled) ----------
+  const navbar = document.getElementById('navbar');
+  const scrollProgress = document.getElementById('scrollProgress');
+  let ticking = false;
+  function onScroll(){
+    const scrollY = window.scrollY || window.pageYOffset;
+    navbar.classList.toggle('is-scrolled', scrollY > 10);
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+    scrollProgress.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking){ requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+  onScroll();
 
   // ---------- Footer year ----------
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -975,6 +1325,22 @@
       statNumbers.forEach(animateCount);
     }
   }
+
+  // ---------- FAQ accordion ----------
+  document.querySelectorAll('.faq__item').forEach(item => {
+    const btn = item.querySelector('.faq__q');
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('is-open');
+      document.querySelectorAll('.faq__item.is-open').forEach(open => {
+        if (open !== item){
+          open.classList.remove('is-open');
+          open.querySelector('.faq__q').setAttribute('aria-expanded', 'false');
+        }
+      });
+      item.classList.toggle('is-open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
 
   // ---------- Enrollment form -> WhatsApp ----------
   const enrollForm = document.getElementById('enrollForm');
